@@ -2,6 +2,17 @@ from botocore.config import Config
 import boto3
 import datetime
 
+import logging
+
+# Enable debug logging for boto3 and botocore
+# logging.basicConfig(level=logging.DEBUG)
+
+# Limit to botocore (avoids too much noise from other libraries)
+# logging.getLogger("botocore").setLevel(logging.DEBUG)
+# logging.getLogger("boto3").setLevel(logging.DEBUG)
+# logging.getLogger("urllib3").setLevel(logging.DEBUG)
+
+
 # Set Myota bZs credentials and endpoint.
 BUCKET = "PUT_YOUR_MYOTA_BUCKET_NAME"
 AWS_ACCESS_KEY_ID = "PUT_YOUR_MYOTA_ACCESS_KEY_ID"
@@ -40,10 +51,9 @@ if __name__ == "__main__":
     # Possibly it depends on boto3 >= 1.24.0 and botocore >= 1.27.0
     client_config = Config(
         region_name="us-east-1",
-        s3={
-            "request_checksum_calculation": "when_required",
-            "response_checksum_validation": "when_required",
-        },
+        request_checksum_calculation="when_required",
+        response_checksum_validation="when_required",
+        s3={"addressing_style": "path"},
     )
 
     # Make S3 client using Myota bZs credentials and endpoint.
